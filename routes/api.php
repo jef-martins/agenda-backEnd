@@ -29,7 +29,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 route::prefix('tarefa')->group(function(){
     route::post('/', [TarefaController::class, 'add']);
-    route::get('/', [TarefaController::class, 'list']);
+    route::get('/{dInicio}/{dFinal}', [TarefaController::class, 'list']);
     route::get('/{id}', [TarefaController::class, 'select']);
     route::put('/{id}', [TarefaController::class, 'update']);
     route::delete('/{id}', [TarefaController::class, 'delete']);

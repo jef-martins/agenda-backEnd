@@ -29,8 +29,11 @@ class TarefaController extends Controller
 
     public function list($dInicio, $dFinal){
         $tarefa = new Tarefa;
-        
         //return $tarefa->all();
+
+        $dInicio = str_replace("-", "/", $dInicio);
+        $dFinal = str_replace("-", "/", $dFinal);
+        
         $dados = DB::table('tarefas')
             ->join('integrantes', 'tarefas.fkIntegrante', '=', 'integrantes.id')
             ->join('datas', 'tarefas.fkData', '=', 'datas.id')
