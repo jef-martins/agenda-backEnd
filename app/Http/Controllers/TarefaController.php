@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Tarefa;
 
@@ -26,10 +27,22 @@ class TarefaController extends Controller
         }
     }
 
-    public function list(){
+    public function list($dInicio, $dFinal){
         $tarefa = new Tarefa;
         
-        return $tarefa->all();
+        //return $tarefa->all();
+        $dados = DB::table('tarefas')
+            ->join('integrantes', 'tarefas.fkIntegrante', '=', 'integrantes.id')
+            ->join('datas', 'tarefas.fkData', '=', 'datas.id')
+            ->join('status', 'tarefas.fkStatus', '=', 'status.id')
+            ->select('integrantes.*', 'datas.*', 'status.*','tarefas.*')
+            ->whereBetween('datas.dia', [$dInicio, $dFinal])
+            ->orderBy('datas.dia', 'asc')
+            ->orderBy('datas.hrInicial', 'asc')
+            ->get();
+        
+        return $dados;
+                      
     }
 
     public function select($id){
