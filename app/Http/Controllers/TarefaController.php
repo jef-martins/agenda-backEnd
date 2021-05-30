@@ -28,7 +28,7 @@ class TarefaController extends Controller
     }
 
     public function list($dInicio, $dFinal){
-        $tarefa = new Tarefa;
+        //$tarefa = new Tarefa;
         //return $tarefa->all();
 
         $dInicio = str_replace("-", "/", $dInicio);
@@ -44,8 +44,28 @@ class TarefaController extends Controller
             ->orderBy('datas.hrInicial', 'asc')
             ->get();
         
-        return $dados;
-                      
+        return $dados;                
+    }
+
+    public function filter($param){
+        
+        $dados = DB::table('tarefas')
+            ->join('integrantes', 'tarefas.fkIntegrante', '=', 'integrantes.id')
+            ->join('datas', 'tarefas.fkData', '=', 'datas.id')
+            ->join('status', 'tarefas.fkStatus', '=', 'status.id')
+            ->select('integrantes.*', 'datas.*', 'status.*','tarefas.*')
+            ->where('tarefas.atividade', 'LIKE', '%'.$param.'%')
+            ->orWhere('tarefas.observacao', 'LIKE', '%'.$param.'%')
+            ->orWhere('integrantes.nome', 'LIKE', '%'.$param.'%')
+            ->orWhere('status.andamento', 'LIKE', '%'.$param.'%')
+            ->orWhere('datas.dia', 'LIKE', '%'.$param.'%')
+            ->orWhere('datas.hrInicial', 'LIKE', '%'.$param.'%')
+            ->orWhere('datas.hrFinal', 'LIKE', '%'.$param.'%')
+            ->orderBy('datas.dia', 'asc')
+            ->orderBy('datas.hrInicial', 'asc')
+            ->get();
+        
+        return $dados;               
     }
 
     public function select($id){
